@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suraj Pabba</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+
+  <!-- analytics -->
+
+  <style>
+    /* ─── CSS Variables ─────────────────────────────── */
+    :root {
+      --bg:      #0e0e0e;
+      --surface: #181818;
+      --accent:  #e8c97e;
+      --accent2: #c0392b;
+      --text:    #f0ece3;
+      --muted:   #7a7672;
+      --border:  rgba(232,201,126,0.15);
+      --nav-h:   64px;
+    }
+
+    /* ─── Reset & Base ──────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+    }
+
+    /* ─── Keyframes ─────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(8px); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ─── Navigation ────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      height: var(--nav-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+      transition: background 0.3s ease, backdrop-filter 0.3s ease;
+    }
+
+    nav.scrolled {
+      background: rgba(14,14,14,0.92);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: 0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--accent); }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--text);
+      transition: transform 0.3s, opacity 0.3s;
+    }
+
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile overlay nav */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: var(--nav-h);
+      left: 0; right: 0;
+      z-index: 99;
+      background: rgba(14,14,14,0.97);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      flex-direction: column;
+      padding: 0;
+    }
+
+    .mobile-nav.open { display: flex; }
+
+    .mobile-nav a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 1.2rem clamp(1.5rem, 5vw, 2rem);
+      border-bottom: 1px solid var(--border);
+      transition: color 0.2s, padding-left 0.2s, background 0.2s;
+      display: block;
+    }
+
+    .mobile-nav a:last-child { border-bottom: none; }
+
+    .mobile-nav a:hover {
+      color: var(--accent);
+      padding-left: calc(clamp(1.5rem, 5vw, 2rem) + 8px);
+      background: rgba(232,201,126,0.04);
+    }
+
+    /* ─── Hero ──────────────────────────────────────── */
+    #hero {
+      position: relative;
+      height: 100svh;
+      min-height: 600px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .hero-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.62);
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 0 1.5rem;
+    }
+
+    .hero-headline {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(3.5rem, 9vw, 7rem);
+      font-weight: 400;
+      color: var(--text);
+      letter-spacing: -0.01em;
+      line-height: 1.05;
+      animation: fadeUp 1.2s ease-out both;
+    }
+
+    .hero-sub {
+      margin-top: 1.2rem;
+      font-family: 'DM Mono', monospace;
+      font-size: clamp(0.7rem, 1.5vw, 0.95rem);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      animation: fadeUp 1.2s ease-out 0.4s both;
+    }
+
+    .scroll-cue {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      font-size: 1.4rem;
+      color: var(--accent);
+      opacity: 0.7;
+      animation: fadeIn 0.5s ease 1.5s both, bounce 2s ease-in-out 2s infinite;
+      cursor: pointer;
+    }
+
+    /* ─── Section Base ──────────────────────────────── */
+    section {
+      padding: clamp(5rem, 10vw, 8rem) clamp(1.5rem, 5vw, 4rem);
+    }
+
+    .section-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 2rem;
+    }
+
+    /* ─── About ─────────────────────────────────────── */
+    #about {
+      background: var(--surface);
+      border-left: 4px solid var(--accent);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+
+    @media (min-width: 1024px) {
+      .about-grid { grid-template-columns: 3fr 2fr; align-items: center; }
+    }
+
+    .about-text h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      font-weight: 400;
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+      color: var(--text);
+    }
+
+    .about-text p {
+      font-family: 'Lora', serif;
+      font-size: 1rem;
+      color: var(--muted);
+      margin-bottom: 1.1rem;
+      line-height: 1.75;
+    }
+
+    .about-text p:last-child { margin-bottom: 0; }
+
+    .about-monogram {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(7rem, 14vw, 12rem);
+      font-weight: 700;
+      line-height: 1;
+      -webkit-text-stroke: 2px rgba(232,201,126,0.15);
+      color: transparent;
+      user-select: none;
+      text-align: center;
+    }
+
+    @media (min-width: 1024px) {
+      .about-monogram { text-align: right; }
+    }
+
+    /* ─── Projects ──────────────────────────────────── */
+    #projects { background: var(--bg); }
+
+    #projects .section-inner { max-width: 860px; }
+
+    #projects h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      font-weight: 400;
+      margin-bottom: 3rem;
+      color: var(--text);
+    }
+
+    .cards { display: flex; flex-direction: column; gap: 1.5rem; }
+
+    .card {
+      background: var(--surface);
+      border-left: 3px solid var(--accent);
+      padding: 2rem 2rem 2rem 2.2rem;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .card.visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent2);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .card-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(232,201,126,0.08);
+      padding: 0.25rem 0.6rem;
+      border-radius: 2px;
+    }
+
+    .card-badge {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 0.2rem 0.55rem;
+      border-radius: 2px;
+    }
+
+    .card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.45rem;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+    }
+
+    .card p {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 1.1rem;
+    }
+
+    .card-cta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+      transition: color 0.2s;
+    }
+
+    .card-cta:hover { color: var(--text); }
+
+    .card-cta.muted-label { color: var(--muted); cursor: default; }
+
+    /* ─── Hobbies ────────────────────────────────────── */
+    #hobbies { background: var(--bg); }
+
+    #hobbies h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      font-weight: 400;
+      margin-bottom: 3rem;
+      color: var(--text);
+    }
+
+    .hobbies-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2.5rem 3rem;
+      max-width: 720px;
+    }
+
+    @media (min-width: 768px) {
+      .hobbies-grid { grid-template-columns: repeat(4, 1fr); max-width: 100%; }
+    }
+
+    .hobby-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 0.5rem;
+      cursor: default;
+    }
+
+    @media (min-width: 768px) {
+      .hobby-item { align-items: flex-start; text-align: left; }
+    }
+
+    .hobby-icon {
+      font-size: 3.5rem;
+      line-height: 1;
+      display: block;
+      transition: transform 0.2s ease;
+    }
+
+    .hobby-item:hover .hobby-icon { transform: scale(1.15); }
+
+    .hobby-label {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.15rem;
+      color: var(--text);
+      margin-top: 0.25rem;
+    }
+
+    .hobby-desc {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.5;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .hobby-item:hover .hobby-desc {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── Contact ────────────────────────────────────── */
+    #contact {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    #contact h2 {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 2.5rem;
+    }
+
+    .contact-email {
+      display: inline-block;
+      font-family: 'DM Mono', monospace;
+      font-size: clamp(0.85rem, 1.5vw, 1rem);
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      border: 1.5px solid var(--accent);
+      padding: 0.9rem 2rem;
+      border-radius: 40px;
+      margin-bottom: 2.5rem;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .contact-email:hover {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    .contact-links {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .contact-link {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 0.55rem 1.2rem;
+      border-radius: 4px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .contact-link:hover {
+      color: var(--accent);
+      border-color: rgba(232,201,126,0.4);
+    }
+
+    /* Footer */
+    footer {
+      padding: 1.5rem clamp(1.5rem, 5vw, 4rem);
+      text-align: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+
+    /* ─── Mobile Nav ─────────────────────────────────── */
+    @media (max-width: 767px) {
+      .nav-links { display: none; }
+      .hamburger { display: none; }
+      .mobile-nav { display: none !important; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ─── Navigation ─────────────────────────────────── -->
+  <nav id="main-nav">
+    <a href="#hero" class="nav-logo">SP</a>
+    <ul class="nav-links" role="list">
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#hobbies">Hobbies</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile overlay -->
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation">
+    <a href="#about" class="mobile-link">About</a>
+    <a href="#projects" class="mobile-link">Projects</a>
+    <a href="#hobbies" class="mobile-link">Hobbies</a>
+    <a href="#contact" class="mobile-link">Contact</a>
+  </nav>
+
+  <!-- ─── Hero ───────────────────────────────────────── -->
+  <section id="hero">
+    <video autoplay loop muted playsinline class="hero-video" aria-hidden="true">
+      <source src="assets/Hyperrealistic_Popcorn_Popping_Video.mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1 class="hero-headline">What's Pabbin</h1>
+
+    </div>
+    <div class="scroll-cue" aria-hidden="true" id="scroll-cue">↓</div>
+  </section>
+
+  <!-- ─── About ──────────────────────────────────────── -->
+  <section id="about">
+    <div class="section-inner">
+      <p class="section-label">About</p>
+      <div class="about-grid">
+        <div class="about-text">
+          <h2>Builder, founder,<br>self-appointed coffee SME.</h2>
+          <p>Suraj Pabba operates at the intersection of AI, data, and the stubborn belief that software should actually work for the people using it.</p>
+          <p>Over a decade across KPMG, Salesforce, iManage, and CNA Insurance has produced one recurring observation: the gap between what data systems can do and what end users experience is almost always a design problem, not a technology problem.</p>
+          <p>He's shipped production AI at startups, sold enterprise SaaS to Fortune 500s, and co-founded InField AI out of the Antler accelerator. These days he consults on data management strategy at CNA while quietly building his next chapter in home services.</p>
+        </div>
+        <div class="about-monogram" aria-hidden="true">SP</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Projects ───────────────────────────────────── -->
+  <section id="projects">
+    <div class="section-inner">
+      <p class="section-label">Work</p>
+      <h2>Selected Projects</h2>
+      <div class="cards">
+
+        <article class="card">
+          <div class="card-meta">
+            <span class="card-label">AI · LangChain</span>
+            <span class="card-badge">Shipped</span>
+          </div>
+          <h3>Electrician Install Assistant</h3>
+          <p>Built with LangChain, this tool ingests product documentation and automatically decomposes it into step-by-step installation instructions tailored for field electricians. Reduces the need to parse dense manufacturer PDFs on the job site.</p>
+          <span class="card-cta muted-label">Private Project</span>
+        </article>
+
+        <article class="card">
+          <div class="card-meta">
+            <span class="card-label">APIs · Integration · UX</span>
+            <span class="card-badge">Career-spanning</span>
+          </div>
+          <h3>Automation Generalist</h3>
+          <p>Across manufacturing, energy, and insurance, I've built source-to-surface automations that put the right data in front of the right person — not just technically correct, but designed around how that persona actually works. The pipeline is table stakes; the UX of the handoff is the product.</p>
+          <span class="card-cta muted-label">Available for consulting</span>
+        </article>
+
+        <article class="card">
+          <div class="card-meta">
+            <span class="card-label">AI · Gmail · Personalization</span>
+            <span class="card-badge">Open Source</span>
+          </div>
+          <h3>Job Digest AI</h3>
+          <p>A daily email digest that finds Forward Deployed Engineer roles matching your background and adds a one-liner on why <em>your</em> specific experience is a fit. Powered by the Anthropic API and Gmail MCP. Built in a weekend because the problem was real.</p>
+          <a href="https://github.com/suraj-pabba89/job-digest" class="card-cta" target="_blank" rel="noopener">→ View on GitHub</a>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Hobbies ─────────────────────────────────────── -->
+  <section id="hobbies">
+    <div class="section-inner">
+      <p class="section-label">Beyond the screen</p>
+      <h2>Outside Work</h2>
+      <div class="hobbies-grid">
+
+        <div class="hobby-item">
+          <span class="hobby-icon">🍳</span>
+          <span class="hobby-label">Cooking</span>
+          <span class="hobby-desc">From-scratch Indian cuisine and whatever the farmer's market suggested</span>
+        </div>
+
+        <div class="hobby-item">
+          <span class="hobby-icon">🚴</span>
+          <span class="hobby-label">Biking</span>
+          <span class="hobby-desc">Naperville trail system, no headphones, full presence</span>
+        </div>
+
+        <div class="hobby-item">
+          <span class="hobby-icon">⛳</span>
+          <span class="hobby-label">Golfing</span>
+          <span class="hobby-desc">Humbling. Addictive. Occasionally good.</span>
+        </div>
+
+        <div class="hobby-item">
+          <span class="hobby-icon">🎵</span>
+          <span class="hobby-label">Music</span>
+          <span class="hobby-desc">Listener first, critic second, playlist curator always</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Contact ─────────────────────────────────────── -->
+  <section id="contact">
+    <div class="section-inner">
+      <h2>Let's talk.</h2>
+      <a href="mailto:hello@surajpabba.com" class="contact-email">hello@surajpabba.com</a>
+      <div class="contact-links">
+        <a href="https://github.com/suraj-pabba89" class="contact-link" target="_blank" rel="noopener">GitHub →</a>
+        <a href="#" class="contact-link">LinkedIn →</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    &copy; <span id="year"></span> Suraj Pabba
+  </footer>
+
+  <script>
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Scroll-cue click
+    document.getElementById('scroll-cue').addEventListener('click', () => {
+      document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // Nav scroll state
+    const nav = document.getElementById('main-nav');
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    }, { passive: true });
+
+    // Active nav link via IntersectionObserver
+    const sections = document.querySelectorAll('section[id]');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+          });
+        }
+      });
+    }, { rootMargin: '-40% 0px -50% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+
+    // Card fade-up on scroll
+    const cards = document.querySelectorAll('.card');
+    const cardObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 120);
+          cardObserver.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -80px 0px' });
+
+    cards.forEach(c => cardObserver.observe(c));
+
+    // Hamburger + mobile nav
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobile-nav');
+    const mobileLinks = document.querySelectorAll('.mobile-link');
+
+    hamburger.addEventListener('click', () => {
+      const open = mobileNav.classList.toggle('open');
+      hamburger.classList.toggle('open', open);
+      hamburger.setAttribute('aria-expanded', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    });
+
+    mobileLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        mobileNav.classList.remove('open');
+        hamburger.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      });
+    });
+  </script>
+
+</body>
+</html>
